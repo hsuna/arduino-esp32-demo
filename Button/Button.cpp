@@ -2,8 +2,8 @@
 #include "Button.h"
 
 namespace Button {
-    int led_pin = 27;
-    int button_pin = 12;
+    int LED_PIN = 27;
+    int BUTTON_PIN = 12;
 
     // LED 初始状态为关闭
     int led_logic = LOW;
@@ -13,16 +13,16 @@ namespace Button {
 
     void init() {
         // 设定引脚为输出模式
-        pinMode(led_pin, OUTPUT);
-        pinMode(button_pin, INPUT_PULLDOWN);
+        pinMode(LED_PIN, OUTPUT);
+        pinMode(BUTTON_PIN, INPUT_PULLDOWN);
     }
 
     void update() {
-        if (digitalRead(button_pin) == HIGH) {
+        if (digitalRead(BUTTON_PIN) == HIGH) {
             delay(100); // 消抖延时
-            if (digitalRead(button_pin) == HIGH && !status) {
+            if (digitalRead(BUTTON_PIN) == HIGH && !status) {
                 led_logic = !led_logic;
-                digitalWrite(led_pin, led_logic);
+                digitalWrite(LED_PIN, led_logic);
                 status = true;
             }
         } else {

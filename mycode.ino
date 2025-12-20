@@ -3,15 +3,16 @@
 #include "Button/Button.cpp"
 #include "Pwm/Pwm.cpp"
 #include "Ledc/Ledc.cpp"
+#include "Adc/Adc.cpp"
 
 void setup()
 {
     Serial.begin(115200); // 初始化串口，波特率 115200
     Serial.println("ESP32 启动成功！");
-    Ledc::init();
+    Adc::init();
 }
 
 void loop()
 {
-    Ledc::update();
+    Adc::update();
 }
