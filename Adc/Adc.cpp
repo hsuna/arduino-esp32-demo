@@ -24,9 +24,9 @@ namespace Adc {
         analogWrite(LED_PIN, ledBrightness);
 
         // 可选：打印调试信息到串口监视器
-        Serial.printf("Potentiometer Value: %d", sensorValue);
-        Serial.printf(" -> LED Brightness: %d\n", ledBrightness);
+        Serial.printf("Potentiometer Value: %d，LED Brightness: %d", sensorValue, ledBrightness);
+        Serial.println("");
 
-        delay(100); // 稍作延时，避免过于频繁的读取
+        delay(1000); // 稍作延时，避免过于频繁的读取
     }
 } // namespace Adc
