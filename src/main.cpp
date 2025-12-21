@@ -7,15 +7,18 @@
 #include "Adc2/Adc2.h"
 #include "WifiTest/WifiTest.h"
 #include "HeartBratTest/HeartBratTest.h"
+#include "Exti/Exti.h"
+#include "Timeout/Timeout.h"
+#include "OledTemp/OledTemp.h"
 
 void setup() {
   Serial.begin(115200); // 初始化串口，波特率 115200
   Serial.println("ESP32 启动成功！");
-  // WifiTest::init();
-  HeartBratTest::init();
+  // Timeout::init();
+  OledTemp::init();
 }
 
 void loop() {
-  // WifiTest::update();
-  HeartBratTest::update();
+  // Timeout::update();
+  OledTemp::update();
 }
