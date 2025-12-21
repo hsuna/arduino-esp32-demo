@@ -11,15 +11,18 @@
 #include "Timeout/Timeout.h"
 #include "OledTemp/OledTemp.h"
 #include "SmartMonitor/SmartMonitor.h"
+#include "SmartHub/SmartHub.h"
 
 void setup()
 {
   Serial.begin(115200); // 初始化串口，波特率 115200
   Serial.println("ESP32 启动成功！");
-  SmartMonitor::init();
+  // SmartMonitor::init();
+  SmartHub::init();
 }
 
 void loop()
 {
-  SmartMonitor::update();
+  // SmartMonitor::update();
+  SmartHub::update();
 }
