@@ -4,6 +4,10 @@
 #include "WifiTest.h"
 #include "../secrets.h"
 
+/*
+电路图:
+ESP32 正常供电 (USB 或 3.3V/GND)
+*/
 namespace WifiTest {
     const char* SSID = WIFI_SSID;
     const char* PASSWORD = WIFI_PASSWORD;

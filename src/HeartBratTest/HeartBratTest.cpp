@@ -1,6 +1,19 @@
 #include <Arduino.h>
 #include "HeartBratTest.h"
 
+/*
+电路图:
+      ESP32 开发板                    心率传感器 (KY-039)
+    +--------------+                +------------------+
+    |              |                |                  |
+    |         3.3V |----------------| + (VCC)          |
+    |              |                |                  |
+    |          GND |----------------| - (GND)          |
+    |              |                |                  |
+    |       GPIO34 |----------------| S (Signal/信号)  |
+    |              |                |                  |
+    +--------------+                +------------------+
+*/
 namespace HeartBratTest {
     const int SENSOR_PIN = 34;    // 传感器连接的模拟引脚
     const int SAMPLE_RATE = 20;   // 采样间隔 (ms)
