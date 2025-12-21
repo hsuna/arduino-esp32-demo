@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <U8g2lib.h>
 #include <DHT.h>
 #include "OledTemp.h"
 
@@ -14,7 +13,7 @@
     |          GND |----------------| GND              |
     |       GPIO21 |----------------| SDA              |
     |       GPIO22 |----------------| SCK              |
-    |              |                +------------------+
+    +--------------+                +------------------+
     |              |                | DHT11 传感器      |
     |         3.3V |----------------| (中间引脚)        |
     |          GND |----------------| -                |
@@ -22,54 +21,58 @@
     +--------------+                +------------------+
 */
 
-namespace OledTemp {
-    Adafruit_SSD1306 display(128, 64, &Wire, -1);
+namespace OledTemp
+{
+    // 使用 U8g2 库支持中文显示
+    // U8G2_SSD1306_128X64_NONAME_F_HW_I2C: 完整帧缓冲, 硬件 I2C
+    U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/U8X8_PIN_NONE, /* clock=*/22, /* data=*/21);
 
     DHT dht(13, DHT11); // DHT11 传感器连接到 GPIO13
 
     unsigned long lastUpdateTime = 0;
 
-    void init() {
+    void init()
+    {
         Serial.println("OledTemp 初始化...");
-        
-        // 初始化 I2C 总线 (GPIO21=SDA, GPIO22=SCK)
-        Wire.begin(21, 22);
-        Wire.setClock(100000); // 设置为 100kHz 提高稳定性
 
         // 初始化 DHT 传感器
         dht.begin();
 
-        // 初始化 OLED 显示屏
-        if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // I2C 地址 0x3C
-            Serial.println(F("SSD1306 初始化失败"));
-            for(;;); // 停止运行
-        }
+        // 初始化 U8g2 OLED 显示屏
+        u8g2.begin();
+        u8g2.enableUTF8Print(); // 启用 UTF-8 支持
 
-        display.clearDisplay();
-        display.setTextSize(1);
-        display.setTextColor(SSD1306_WHITE);
-        display.setCursor(0,0);
-        display.println("System Ready");
-        display.display();
+        // 设置中文字体 (wqy12 是文泉驿 12 像素点阵字体)
+        u8g2.setFont(u8g2_font_wqy12_t_gb2312);
+        u8g2.setFontDirection(0);
+
+        // 显示启动信息
+        u8g2.clearBuffer();
+        u8g2.setCursor(20, 30);
+        u8g2.print("系统准备就绪...");
+        u8g2.sendBuffer();
         delay(1000);
     }
 
-    void update() {
+    void update()
+    {
         unsigned long currentTime = millis();
-        
+
         // 每 2 秒读取并更新一次
-        if (currentTime - lastUpdateTime >= 2000) {
+        if (currentTime - lastUpdateTime >= 2000)
+        {
             lastUpdateTime = currentTime;
 
             float h = dht.readHumidity();
             float t = dht.readTemperature();
 
-            if (isnan(h) || isnan(t)) {
+            if (isnan(h) || isnan(t))
+            {
                 Serial.println(F("读取 DHT 传感器失败!"));
-                display.clearDisplay();
-                display.setCursor(0,0);
-                display.println("Sensor Error!");
-                display.display();
+                u8g2.clearBuffer();
+                u8g2.setCursor(0, 15);
+                u8g2.print("传感器错误!");
+                u8g2.sendBuffer();
                 return;
             }
 
@@ -80,24 +83,27 @@ namespace OledTemp {
             Serial.print(t);
             Serial.println(F("°C"));
 
-            // OLED 显示
-            display.clearDisplay();
-            display.setTextSize(1);
-            display.setCursor(0,0);
-            display.println("Temp & Humidity");
-            
-            display.setTextSize(2);
-            display.setCursor(0,20);
-            display.print("T: ");
-            display.print(t);
-            display.print(" C");
+            // OLED 显示中文
+            u8g2.clearBuffer();
 
-            display.setCursor(0,45);
-            display.print("H: ");
-            display.print(h);
-            display.print(" %");
+            // 标题
+            u8g2.setFont(u8g2_font_wqy12_t_gb2312);
+            u8g2.setCursor(0, 12);
+            u8g2.print("温湿度监测");
 
-            display.display();
+            // 温度显示
+            u8g2.setCursor(0, 32);
+            u8g2.print("温度: ");
+            u8g2.print(t, 1);
+            u8g2.print(" °C");
+
+            // 湿度显示
+            u8g2.setCursor(0, 52);
+            u8g2.print("湿度: ");
+            u8g2.print(h, 1);
+            u8g2.print(" %");
+
+            u8g2.sendBuffer();
         }
     }
 } // namespace OledTemp
