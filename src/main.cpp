@@ -10,15 +10,16 @@
 #include "Exti/Exti.h"
 #include "Timeout/Timeout.h"
 #include "OledTemp/OledTemp.h"
+#include "SmartMonitor/SmartMonitor.h"
 
-void setup() {
+void setup()
+{
   Serial.begin(115200); // 初始化串口，波特率 115200
   Serial.println("ESP32 启动成功！");
-  // Timeout::init();
-  OledTemp::init();
+  SmartMonitor::init();
 }
 
-void loop() {
-  // Timeout::update();
-  OledTemp::update();
+void loop()
+{
+  SmartMonitor::update();
 }
