@@ -12,17 +12,17 @@
 #include "OledTemp/OledTemp.h"
 #include "SmartMonitor/SmartMonitor.h"
 #include "SmartHub/SmartHub.h"
+#include "SmartHubTft/SmartHubTft.h"
+#include "TftTest/TftTest.h"
 
 void setup()
 {
   Serial.begin(115200); // 初始化串口，波特率 115200
   Serial.println("ESP32 启动成功！");
-  // SmartMonitor::init();
-  SmartHub::init();
+  SmartHubTft::init();
 }
 
 void loop()
 {
-  // SmartMonitor::update();
-  SmartHub::update();
+  SmartHubTft::update();
 }

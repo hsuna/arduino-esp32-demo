@@ -62,6 +62,33 @@
 - **功能**: 连接指定 Wi-Fi 并向百度发送 HTTP GET 请求，在串口打印响应内容。
 - **配置**: 需在 `WifiTest.cpp` 中修改 `SSID` 和 `PASSWORD`。
 
+### 9. SmartHubTft (智能管家 - TFT 彩屏版)
+
+- **功能**: 综合演示模块。在 1.54 寸 TFT (ST7789) 屏幕上显示环境数据（温湿度、光照）和系统状态。支持按键切换界面，RGB LED 根据温度显示不同颜色，光照超过阈值时蜂鸣器报警。
+- **硬件连接**:
+  - TFT (SPI): CS->5, DC->2, RST->15, SCL->18, SDA->23
+  - DHT11: GPIO13
+  - 光敏电阻 (LDR): GPIO35
+  - 电位器 (阈值调节): GPIO34
+  - 按键: GPIO14
+  - 蜂鸣器: GPIO12
+  - RGB LED: R->4, G->16, B->17
+- **特点**: 使用 `U8g2_for_Adafruit_GFX` 实现 TFT 屏幕上的中文显示，并优化了刷新逻辑以消除闪烁。
+
+## 常见问题与解决方案
+
+### 库冲突：U8g2 与 U8g2_for_Adafruit_GFX
+
+**问题描述**:
+当同时安装 `U8g2` 和 `U8g2_for_Adafruit_GFX` 库时，编译会报错 `multiple definition of 'u8g2_font_...'`。这是因为两个库都包含了相同的字体定义文件 `u8g2_fonts.c`。
+
+**解决方案**:
+
+1. 将 `U8g2_for_Adafruit_GFX` 库从 `.pio/libdeps` 复制到项目的 `lib/` 目录下进行本地化管理。
+2. 删除本地库中的 `lib/U8g2_for_Adafruit_GFX/src/u8g2_fonts.c` 文件。
+3. 这样链接器会统一使用 `U8g2` 库中的字体定义，从而消除冲突。
+4. 本项目已完成此处理，直接编译即可。
+
 ## 如何使用
 
 1. **环境准备**: 安装 VS Code 和 PlatformIO 插件。
@@ -78,5 +105,8 @@
 项目依赖已在 `platformio.ini` 中配置，主要包括：
 
 - `U8g2`
+- `U8g2_for_Adafruit_GFX`
 - `DHT sensor library`
 - `Adafruit Unified Sensor`
+- `Adafruit GFX Library`
+- `Adafruit ST7735 and ST7789 Library`
