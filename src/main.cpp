@@ -14,15 +14,18 @@
 #include "SmartHub/SmartHub.h"
 // #include "SmartHubTft/SmartHubTft.h"
 #include "TftTest/TftTest.h"
+#include "JoystickTest/JoystickTest.h"
 
 void setup()
 {
   Serial.begin(115200); // 初始化串口，波特率 115200
   Serial.println("ESP32 启动成功！");
-  SmartHub::init();
+  // SmartHub::init();
+  JoystickTest::init();
 }
 
 void loop()
 {
-  SmartHub::update();
+  // SmartHub::update();
+  JoystickTest::update();
 }
